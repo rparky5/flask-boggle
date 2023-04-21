@@ -3,6 +3,8 @@ from uuid import uuid4
 
 from boggle import BoggleGame
 
+GAME_ID_JSON_KEY = "gameId"
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "this-is-secret"
 
@@ -26,18 +28,18 @@ def new_game():
     game = BoggleGame()
     games[game_id] = game
 
-    return {"game_id": game_id, "board": game.board}
+    return jsonify({GAME_ID_JSON_KEY: game_id, "board": game.board})
 
 @app.post("/api/score-word")
 def score_word():
     """Takes a word and game id and lets us know if it's a valid word and on the board"""
 
-    current_game = games[request.form.get("game_id")]
-    current_word = request.form.get("word")
+    current_game = games[request.json.get(GAME_ID_JSON_KEY)]
+    current_word = request.json.get("word")
 
-    in_word_list = current_game.is_word_in_word_list(current_word)
+    is_in_word_list = current_game.is_word_in_word_list(current_word)
 
-    if not in_word_list:
+    if not is_in_word_list:
         return jsonify({"result": "not-word"})
 
     is_on_board = current_game.check_word_on_board(current_word)
