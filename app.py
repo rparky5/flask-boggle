@@ -28,3 +28,22 @@ def new_game():
 
     return {"game_id": game_id, "board": game.board}
 
+@app.post("/api/score-word")
+def score_word():
+    """Takes a word and game id and lets us know if it's a valid word and on the board"""
+
+    current_game = games[request.form.get("game_id")]
+    current_word = request.form.get("word")
+
+    in_word_list = current_game.is_word_in_word_list(current_word)
+
+    if not in_word_list:
+        return jsonify({"result": "not-word"})
+
+    is_on_board = current_game.check_word_on_board(current_word)
+
+    if not is_on_board:
+        return jsonify({"result": "not-on-board"})
+
+    else:
+        return jsonify({"result": "ok"})
