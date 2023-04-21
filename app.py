@@ -27,4 +27,3 @@ def new_game():
     games[game_id] = game
 
     return {"game_id": game_id, "board": game.board}
-
