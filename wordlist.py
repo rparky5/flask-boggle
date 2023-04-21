@@ -35,6 +35,12 @@ class WordList:
 
             >>> wl.check_word("ASDFG")
             False
+
+            >>> wl.check_word("cat")
+            False
+
+            >>> wl.check_word("")
+            False
         """
 
         return word in self.words
